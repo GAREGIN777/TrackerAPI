@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Update Test</title>
+</head>
+<body>
+<h1>Send Location Updates</h1>
+<form id="locationForm">
+    <label for="lat">Latitude:</label>
+    <input type="number" id="lat" name="lat" step="0.000001" required>
+    <br>
+    <label for="lng">Longitude:</label>
+    <input type="number" id="lng" name="lng" step="0.000001" required>
+    <br>
+    <label for="speed">Speed:</label>
+    <input type="number" id="speed" name="speed" step="0.1" required>
+    <br>
+    <button type="submit">Send</button>
+</form>
+
+<script>
+    document.getElementById('locationForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const lat = parseFloat(document.getElementById('lat').value);
+        const lng = parseFloat(document.getElementById('lng').value);
+        const speed = parseFloat(document.getElementById('speed').value);
+
+
+        let obj  =  { lat: lat, lng: lng, speed: speed,bearing : Math.PI};
+
+        const points = [];
+
+        for(let i = 0;i < 200;i++){
+            points.push(obj)
+        }
+
+        fetch('/api/sendLocationUpdates/exampleChannelId', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ points: points })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Location updates sent successfully!');
+                } else {
+                    alert('Failed to send location updates: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while sending location updates.');
+            });
+    });
+</script>
+</body>
+</html>
