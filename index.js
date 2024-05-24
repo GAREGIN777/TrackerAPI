@@ -20,8 +20,9 @@ app.use(bodyParser.json());
 // Define a route that sends a JSON response
 //Uid is initiated as channel uid
 app.post('/api/sendLocationUpdates/:channelId',(req,res) => {
-    const {points} = req.body;
+    const points = req.body;
     const {channelId} = req.params;
+    console.log(points);
 
     if (points === null) {
         return res.status(400).json({ success: false, error: 'Data cannot be null' });
